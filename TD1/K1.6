@@ -1,0 +1,93 @@
+#!/usr/bin/env python3
+
+import argparse
+import math
+import sys
+
+def K2(X):
+    Z = math.floor(X / 10 ** 8) % 10
+    return K_ptrs[Z](X)
+
+def K3(X):
+    if X < 5000000000:
+        return X + 5000000000
+    else:
+        return X
+
+def K4(X):
+    return math.floor(x * x / 100000) % (10 ** 10)
+
+def K5(X):
+    return (1001001001 * X) % (10 ** 10)
+
+def K6(X):
+    if X < 100000000:
+        return X + 9814055677
+    else:
+        return (10 ** 10) - X
+
+def K7(X):
+    return 100000*(X % 100000) + math.floor(x / 100000)
+
+def K8(X):
+    return K5(X)
+
+def K9(X):
+    num_string = str(X)
+    for ch in num_string:
+        if ch != '0':
+            ch = chr(ord(ch)-1)
+    return int(num_string)
+
+def K10(X):
+    if X < 100000:
+        return X*X + 99999
+    else:
+        return X - 99999
+
+def K11(X):
+    ret = X
+    if X < 1000000000:
+        ret = ret *10
+    return ret
+
+def K12(X):
+    return math.floor( (x * (x - 1)) / 100000) % (10 ** 10)
+
+K_ptrs = [K3, K4, K5, K6, K7, K8, K9, K10, K11, K12]
+
+def K(s):
+    # K1
+    X = s
+    Y = math.floor(X / 10 ** 9) + 1
+
+    # K13
+    while Y > 0:
+        X = K2(X)
+        X = K3(X)
+        X = K4(X)
+        X = K5(X)
+        X = K6(X)
+        X = K7(X)
+        X = K8(X)
+        X = K9(X)
+        X = K10(X)
+        X = K11(X)
+        X = K12(X)
+        Y = Y - 1
+
+    return X
+
+def main():
+    parser = argparse.ArgumentParser(description='Knuth K algorithm')
+    parser.add_argument("seed", help="", type=int)
+
+    args = parser.parse_args()
+    if len(str(args.seed)) != 10:
+        print("error : seed must be a 10 digit number")
+        sys.exit(-1)
+
+    print(K(args.seed))
+
+if __name__ == "__main__":
+    main()

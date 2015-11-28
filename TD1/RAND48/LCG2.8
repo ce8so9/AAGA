@@ -1,0 +1,27 @@
+#!/usr/bin/env python3
+
+import argparse
+import math
+
+def lcg(n, a, c, m):
+    return (a*n + c) % m
+
+def main():
+    parser = argparse.ArgumentParser(description='Generic linear congruential generator PRNG')
+
+    parser.add_argument("seed", help="seed", type=int)
+    parser.add_argument("m", help="modulo", type=int)
+    parser.add_argument("a", help="multiplicator", type=int)
+    parser.add_argument("c", help="increment", type=int)
+    parser.add_argument("n", help="output n first terms", type=int)
+
+    args = parser.parse_args()
+    curr = args.seed
+
+    for i in range(args.n):
+        curr = lcg(curr, a, c, m)
+        print(curr)
+
+if __name__ == "__main__":
+    main()
+

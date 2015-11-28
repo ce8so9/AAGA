@@ -1,0 +1,69 @@
+#!/usr/bin/env python3
+
+import argparse
+import subprocess
+
+def find_period(l):
+    i = 1
+    j = 2
+
+    while l[i] != l[j] and j <= len(l):
+        i = i + 1
+        j = j + 2
+
+    if j > len(l):
+        return -1
+    # else:
+        # print("found n : {0}".format(i))
+
+    n = i
+    k = n + 1
+
+    while l[n] != l[k] and k <= len(l):
+        k = k + 1
+
+    if k > len(l):
+        return -1
+
+    lambd = k - n
+    # print("found lambda : {0}, k : {1}".format(lambd, k))
+    r = lambd
+    k = 0
+
+    while l[k] != l[r] and r <= len(l):
+        r = r + 1
+        k = k + 1
+
+    if r > len(l) or k > len(l):
+        return -1
+
+    mu = r - lambd
+    # print("found mu : {0}".format(mu))
+    return (lambd, mu)
+
+def main():
+    parser = argparse.ArgumentParser(description='PRNG period analyzer')
+    parser.add_argument("prog", help="program name", type=str)
+    parser.add_argument("Nmax", help="range upper bound", type=int)
+
+    args = parser.parse_args()
+    filename = "/tmp/out"
+    periods = []
+
+    for i in range(args.Nmax):
+        subprocess.call(["./"+args.prog, str(i), "128", "-o", filename])
+
+        with open(filename, 'r') as infile :
+            nums = [int(line.rstrip('\n')) for line in infile]
+
+            period = find_period(nums)[0]
+            periods.append(period)
+
+    import matplotlib.pyplot as plt
+
+    plt.bar(range(args.Nmax), periods)
+    plt.show()
+
+if __name__ == "__main__":
+    main()
+

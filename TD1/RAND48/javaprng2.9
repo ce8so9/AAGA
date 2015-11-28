@@ -1,0 +1,46 @@
+#!/usr/bin/env python3
+
+import argparse
+import math
+
+from struct import pack, unpack
+
+def rand48(n):
+    return (25214903917*n + 11) % (2**48)
+
+def java_gen(n):
+
+    num_48bits = bin(rand48(n))[2:]
+
+    # num_48bits = rand48(n)
+    if len(num_48bits) < 48:
+        num_48bits = ('1'*(48 - len(num_48bits))) + num_48bits
+
+    pyint_32 = int(num_48bits[0:31], 2)
+    # if (pyint_32 & 0x80000000):
+        # pyint_32 = -0x100000000 + pyint_32
+    return unpack('=i', pack('=i', pyint_32))[0]
+
+    # if (num_48bits & 0x80000000):
+        # num_48bits = -0x100000000 + num_48bits
+    # return ctypes.c_long(pyint_32 & 0xFFFFFFFF).value
+    # return num_48bits
+
+
+    return
+def main():
+    parser = argparse.ArgumentParser(description='Java PRNG using RAND48 generator')
+
+    parser.add_argument("seed", help="seed", type=int)
+    parser.add_argument("n", help="output n first terms", type=int)
+
+    args = parser.parse_args()
+    curr = args.seed
+
+    for i in range(args.n):
+        curr = java_gen(curr)
+        print(curr)
+
+if __name__ == "__main__":
+    main()
+

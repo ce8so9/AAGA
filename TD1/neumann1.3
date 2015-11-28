@@ -1,0 +1,54 @@
+#!/usr/bin/env python3
+
+import argparse
+import math
+
+def ms2(x):
+    x2 = x * x
+    return math.floor(x2 / 10) % 100
+
+def ms3(x):
+    x2 = x * x
+    return math.floor(x2 / int(pow(10, 1.5))) % 1000
+
+def ms4(x):
+    x2 = x * x
+    return math.floor(x2 / 100) % 10000
+
+def neumann3d(n):
+
+    succ = n * n
+    succ_str = str(succ)
+    if len(succ_str) < 7:
+        succ_str = '0'*(7-len(succ_str)) + succ_str
+
+    if len(succ_str) == 7:
+        succ = int(succ_str[2:5])
+    else:
+        succ = -1
+
+    return succ
+
+def main():
+    parser = argparse.ArgumentParser(description='3 digits PRNG')
+    parser.add_argument("N", help="apply middle number algorithm to N", type=int)
+    parser.add_argument("times", help="how many times the algorithm is applied", type=int)
+    parser.add_argument("-o", "--output", help="output filename", type=str)
+
+    args = parser.parse_args()
+    curr = args.N
+
+    if len(str(curr)) > 3:
+        print("N must be in range [0, 999]")
+        sys.exit(1)
+
+    with open(args.output, 'w') as outfile :
+        for i in range(args.times):
+            curr = neumann3d(curr)
+            # curr = ms3(curr)
+            # print(curr)
+            outfile.write(str(curr) + '\n')
+
+if __name__ == "__main__":
+    main()
+

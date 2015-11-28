@@ -1,0 +1,12 @@
+Il est préférable d'avoir Python 3 avec matplotlib (fourni avec numpy) pour lancer les programmes.
+
+Le code dans neumann3d génère les nombres avec concaténation de chaînes et coercion de types,
+faute de résultats concluants sur la solution plus numérique de la fonction ms3.
+
+Description des programmes:
+
+neumann10d : Algorithme du milieu du carré pour les nombres à 10 chiffres (ex 1.1)
+neumann1.3 : Algorithme du milieu du carré pour les nombres à 3 chiffres (ex 1.3)
+prng_distrib_analyzer : Analyseur de la distribution des nombres générés par un PRNG
+                        pour un nombre donné (ex 1.4)
+prng_period_analyzer: Analyseur de la période d'un PRNG (ex 1.4)

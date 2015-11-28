@@ -1,0 +1,36 @@
+#!/usr/bin/env python3
+
+import argparse
+import math
+
+def ms10(x):
+    return math.floor(x * x / 100000) % int(math.pow(10, 10))
+
+def neumann(n):
+
+    succ = n * n
+    succ_str = str(succ)
+    if len(succ_str) < 20:
+        succ_str = '0'*(20-len(succ_str)) + succ_str
+
+    if len(succ_str) == 20:
+        succ = int(succ_str[5:15])
+    else:
+        succ = -1
+
+    return succ
+
+def main():
+    parser = argparse.ArgumentParser(description='10 digits PRNG')
+    parser.add_argument("N", help="apply middle number algorithm to N", type=int)
+    parser.add_argument("times", help="how many times the algorithm is applied", type=int)
+
+    args = parser.parse_args()
+    curr = args.N
+
+    for i in range(args.times):
+        curr = ms10(curr)
+        print(curr)
+
+if __name__ == "__main__":
+    main()
