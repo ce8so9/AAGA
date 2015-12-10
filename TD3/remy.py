@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 
 import random
+import pydot
+
+graph = pydot.Dot(graph_type="digraph")
 
 class BinaryTree():
 
@@ -9,14 +12,8 @@ class BinaryTree():
       self.right = None
       self.rootid = rootid
 
-    def getLeftChild(self):
-        return self.left
-    def getRightChild(self):
-        return self.right
-    def setNodeValue(self,value):
-        self.rootid = value
-    def getNodeValue(self):
-        return self.rootid
+    def isLeaf(self):
+        return self.left == None and self.right == None
 
     def insertRight(self,newNode):
         if self.right == None:
@@ -34,22 +31,32 @@ class BinaryTree():
             self.left = tree
             tree.left = self.left
 
-def printTree(tree):
-        if tree != None:
-            print(tree.getNodeValue())
-            printTree(tree.getLeftChild())
-            printTree(tree.getRightChild())
-        else:
-            print("()")
+def drawTree(root):
+
+    if root == None or root.rootid == None:
+        return
+    else:
+        if not root.isLeaf():
+            print(root.rootid)
+            if root.left:
+                edge_left = pydot.Edge(str(root.rootid), str(root.left.key))
+                graph.add_edge(edge_left)
+
+            if root.right:
+                edge_right = pydot.Edge(str(root.rootid), str(root.right.key))
+                graph.add_edge(edge_right)
+
+            printTree(root.left)
+            printTree(root.right)
 
 def remy(N):
-    tree = BinaryTree(0)
-    k = 0
+    tree = BinaryTree(1)
+    k = 1
     tab = [tree]
 
-    while k < N:
+    while k < N + 1:
 
-        hit = random.randint(0, 2*k)
+        hit = random.randint(0, 2*(k-1))
         curr = tab[hit]
         b = random.randint(0, 1)
 
@@ -65,6 +72,7 @@ def remy(N):
         else:
             new_int_node.insertLeft(new_leaf)
             new_int_node.insertRight(tree)
+
         tab[k] = new_int_node
 
     print(len(tab))
@@ -72,7 +80,8 @@ def remy(N):
 
 def main():
     # nbre de noeuds internes
-    printTree(remy(6))
+    drawTree(remy(6))
+    graph.write_png("remy.png")
 
 if __name__ == "__main__":
     main()
