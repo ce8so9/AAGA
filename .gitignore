@@ -1,1 +1,5 @@
 **/__pycache__/
+*.png
+a.out
+data.txt
+*.pdf

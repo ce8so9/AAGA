@@ -1,0 +1,154 @@
+caracteristiques du twister
+
+- taille du reg utilise env 624 x 32 ~ 20k bits -> graine tres grnde
+- on fait appel a un lcg pour avoir une seed
+- periode 2 ** 19937 - 1
+en pratique ne boucle jamais, c'est un prime num de mersenne
+passe "presque" ts les test statistiques (dont le + connu Die Hard)
+mais une aussi longue periode pas necessaire
+en simplifiant les regs avec une taille plus petite, on gagne en tps de calcul
+- une periode de 2 ** 512 serait suffisante
+- version simplifiee avec une periode de 2 ** 607 - 1, bien plus rapide
+
+ch 2
+
+gen de strucutures arboresentes (arbres)
+
+simulation permet d'etablir des conjectures pour des etudes theriques
+des tests d'algos (en gen aleat les entrees)
+
+dans 1 1er tps, si on veut reconstituer la distribution de l'espace d'etat genere, on fait de la generation
+uniforme
+
+par la suite, on reflechit a comment biaiser la distrib uniforme pour en obtenir une qui colle a la pratique
+
+2.1 generation optimale
+
+Soit C un ens fini d'objs dans lequel je veux en generer 1 uniformement au hasard
+Soit |C| le nb d'objets dans C, on veut chaque obj avec une prob de 1 / |C|
+
+Pte: le nb min de bits aleat necessaires a gen unif 1 objet de C est ceil(log2(|C|))
+Preuve: Si on a ts les objets devant ns, il suffit a chacun d'eux d'associer 1 entier entre 0 et |C|-1
+(<= 2 ** ceil()) et avec ceil() bits, je construis unif 1 entier
+
+Avec moins de bits aleatoires, on ne peut pas faire.
+si |C| = 2 ** n, on veut generer unif un objet parmi 2**n avec alpha bits et alpha < n.
+On ne peut pas gen chaque entier entre 1 et 2**n avec alpha bits, dc on ne peut pas plus gen unif ds C.
+
+Rmq: on peut gen unif un obj sans tous les construire
+2 methodes:
+- donner a chaq objet un id  unique et a partir de cet id de construire l'objet
+- on construit directement l'objet avec des etapes aleatoires et o na suffisamment d'info surles etapes pr prouver que chaque objet peut etre construit avec la m prob
+
+2.2 Arbres Bin (AB)
+
+1 AB:
+- soit une feuille
+- soit un arbre avec 1 racine + 2 AB accroches (fils gauche et droit)
+
+Spec non ambigue:
+B = F | (R, B, B)
+
+Pte : Il y a Catalan(n) ABs avec n noeuds internes (n+1 feuilles)
+
+1) Algo de Remy
+Gen unif d'un AB avec n noeuds internes
+Algo constructif, iter de k = 0 a 
+- pt de depart : 1 feuille num 1, k = 0
+- supposons qu'on ait construit 1 arbre de taille k avec k noeuds internes 
+  et (k + 1) feuilles numerotees avec 1 nb entre 1 et k + 1 ( sans repetition )
+- on tire unif 1 noeud interne ou feuille (on choisit unif  
+  1 entier entre 1 et 2k+1 - 2k + 1 noeuds et feuilles)
+on appelle F le sous arbre enracine en le noeud choisi et A l'arbre global
+
+- on tire a pile ou face
+ on remplace dans A :  F par l'arbre (nouv noeud, F, feuille(k-2)) si pile
+                       F par l'arbre (nouv noeud, feuille(k-2), F) si face
+
+a la fin on oublie la numerotation des feuilles
+
+rmq : la numerotation des feuilles est inutile en pratique
+neanmoins, elle est centrale dans la preuve de correction
+(gen unif d'1 AB) : pté d'unif correction nn immediate
+un arbre peut etre construit de differentes manieres
+
+2) Correction de l'algo
+
+Th: Apres n etapes, en effacant les numeros des feuilles, on obtient un arbre binaire de taille n, 
+uniformement parmi tous les ABs de taille n.
+
+Preuve: on obtient 1 arbre unif parmi ts les arbres
+
+ts les tirages sont indpts
+
+On s'interesse a la prob de tirer 1 arbre fixe de taille n (avec les feuilles num)
+P(apres n etapes, on obtient A) = 1/1 x 1/2 (etape 1)
+                                  1/3 x 1/2
+                                  1/5 x 1/2
+                                  1/2n-1 x 1/2 (etape n)
+
+Rmq: grace a la numerotation, on peut deconstriure l'arbre
+=> pr un arbre fixe, il n'y a qu'1 facon de le constuire
+
+P() = (1/2)**n x 1/(2n-1)(2n-3)..5x3x1 = 1/2**n x (2n)(2n-2)(2n-4)...6x4x2/(2n)!
+    = n! / (2n)!
+
+Il y a une unique suite d'itertions qui construit l'arbre A fixe
+Cb de suite de n iterations distinctes y-a-t-il?
+(2n)!/n! car chaque arbre avec feuilles etiquetees de taille n a la meme prob
+
+On a un algo unif qui genere les structures etiquetees
+On reprend A fixe, on oublie les etiquettes des feuilles.
+Soit Atilde la structure d'arbre obtenue
+
+Rmq: A~ peut etre obtenu a partir d'arbres avec feuilles etiquetees differents
+En etiq les k+1 feuilles de A~, on a un arbre constructible avec l'algo de gen
+
+Cmb d'arbres gen par l'algo donnent (apres desetiq) la structure A~? : (n+1)!
+
+Soit T un AB nn etiquete
+Quelle est la prob de gen T avec l'algo (construction de l'objet etiquete puis desetiq)?
+
+P(construire T) = (n! / (2n)!) x (n+1)!
+                = prob de gen un arbre etiq x nb d'arbres etiqs qui donnent T
+
+Pour finir, il faut prouv que ts les ABs st constructibles
+
+(2n)! / (n+1)!n! = 1/(n+1) x (2n)!/n!n! = 1/(n+1) + n parmi 2n = catalan(n) nb d'AB
+
+
+
+3) Complexites
+Temp: Theta(n) si on prend des precautions
+on veut acceder en temps cst a chaque noeud => une map
+
+Spatiale: Theta(n)
+Complexite au pire en nb de bits aleatoires necessaires (pr construire 1 arbre de taille n)
+
+Th: Complexite en nb de bits est Theta(n log n)
+Preuve: Par recur
+- passage de l'arbre de taille k a l'arbre de taille k + 1
+  - choisir unif 1 noeud cad tirer un entier unif entre 1 et 2k + 1 (nb de noeuds) -> il faut ceil(log2(2k+1)) bits
+  - pile ou face 1 bit
+
+nb de bits = Sigma de k=1 a n-1 (ceil(log2(2k + 1) +1) + 1 (cas de base)
+           <= n + (n-1)*ceil(log2(2n+1))
+           <= n + n*(log2(2n) + 1) = 2n + nlog2(2n) = 2n + n(1 + log2(n)) = Theta(nlog(n))
+
+Rmq : Complexité optimale serait ceil(log2(Catalan(n))) ~~ ceil(log2(4**n/sqrt(PI*n**3))) Theta(n)
+
+II Gen generique Par l'exemple
+
+On s'interesse a la gen recursive des ABs
+Attention, moins efficace que l'algo de remy, mais on peut l'adapter de facon automatique a n'importe 
+quel type d'arbre
+
+Idee de base : def un ordre total sur les structures d'arbres de meme taille 
+i.e etre capable de les cmparer
+Si on sait comparer n'importe quels arbres de meme taille, on saura les gen recursivement
+
+2eme idee : associer a chaque arbre un numero l'ordre sur les nums est compatible avec l'ordre bin
+
+3eme idee : savoir reconstruire l'arbre correspondant a n'importe quel num (taille donnee)
+4eme idee ; on choisit unif un entier entre 1 et le num max (pour les arbres de taille n)
+puis on reconstruit l'arbre
