@@ -5,11 +5,35 @@ import argparse
 
 import pydot
 import math
-import tree
 
-graph = pydot.Dot(graph_type="digraph")
-i = 0
+# graph = pydot.Dot(graph_type="digraph")
+graph = pydot.Dot(graph_type='digraph', nodesep=.75)
 array_and_mat = None
+
+class AUB():
+    def __init__(self, key):
+      self.left = None
+      self.right = None
+      self.key = key
+
+    @staticmethod
+    def printTree(root):
+        if root == None:
+            pass
+        else:
+            if root.left:
+                edge_left = pydot.Edge(str(root.key), str(root.left.key))
+                graph.add_edge(edge_left)
+
+            if root.right:
+                edge_right = pydot.Edge(str(root.key), str(root.right.key))
+                graph.add_edge(edge_right)
+
+            if not root.left and not root.right:
+                graph.add_node(pydot.Node(root.key))
+
+            AUB.printTree(root.left)
+            AUB.printTree(root.right)
 
 # takes an array and return sigma(k<-[1..n])A(k)A(n-k)
 def comb(t, n, combs):
@@ -36,7 +60,7 @@ def pop(n):
 
 def gen(n, node, tree_num=-1):
 
-    if n <= 0 or node == None:
+    if n <= 1 or node == None:
         return
 
     global array_and_mat
@@ -49,6 +73,7 @@ def gen(n, node, tree_num=-1):
 
     if tree_num == -1:
         hit = random.randint(1, nb_of_trees)
+        # hit = 600
     else:
         hit = tree_num
 
@@ -56,7 +81,7 @@ def gen(n, node, tree_num=-1):
     print("if {0} <= {1} then unary".format(hit, unary_tree_nb))
 
     if hit <= unary_tree_nb:
-        node.left = tree.AUB(-1)
+        node.left = AUB(n-1)
         gen(n-1, node.left, hit)
     else:
         i = 0
@@ -92,8 +117,8 @@ def gen(n, node, tree_num=-1):
         tree_num_left = couples[tree_num-1][0]
         tree_num_right = couples[tree_num-1][1]
 
-        node.left = tree.AUB(-1)
-        node.right = tree.AUB(-1)
+        node.left = AUB(n-1)
+        node.right = AUB(n-2)
 
         gen(found_k, node.left, tree_num_left)
         gen(found_nk, node.right, tree_num_right)
@@ -105,8 +130,12 @@ def main():
     args = parser.parse_args()
     global array_and_mat
     array_and_mat = pop(args.N)
-    root = tree.AUB(-1)
+    root = AUB(args.N)
     gen(args.N, root)
+    AUB.printTree(root)
+    global graph
+    graph.add_node(pydot.Node('graph'))
+    graph.write_png("gen_aub.png")
 
 if __name__ == "__main__":
     main()
