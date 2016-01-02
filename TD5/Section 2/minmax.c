@@ -4,7 +4,7 @@
 #include <limits.h>
 #include <string.h>
 
-#include "timer.h"
+#include "../c_timer/timer.h"
 
 float *ALEA;
 
@@ -104,6 +104,7 @@ void test(int n){
         naive_min_max(ALEA, i, &min, &max);
         second_step_timer;
         snprintf(buffer+strlen(buffer), sizeof(buffer), "%lf\n", tim1);
+
         buffer[strlen(buffer)] = '\0';
         fwrite(buffer , sizeof(char), strlen(buffer), pFile);
     }

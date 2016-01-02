@@ -131,10 +131,11 @@ def main():
     global array_and_mat
     array_and_mat = pop(args.N)
     root = AUB(args.N)
+
+    global graph
     gen(args.N, root)
     AUB.printTree(root)
-    global graph
-    graph.add_node(pydot.Node('graph'))
+    print(graph.to_string())
     graph.write_png("gen_aub.png")
 
 if __name__ == "__main__":

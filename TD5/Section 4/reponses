@@ -1,0 +1,129 @@
+4.1
+
+Somme maximale
+
+Question 16
+Proposer un algorithme élémentaire pour résoudre ce problème. Donner la mesure usuelle de complexité,
+et la complexité de cet algorithme.
+
+        int N = arr.length, max = Integer.MIN_VALUE;
+        for (int i = 0; i < N; i++) {
+            int sum = 0;
+            for (int j = i; j < N; j++) {
+                sum += arr[j];
+
+                if (sum > max)
+                    max = sum;
+            }
+
+        }
+
+        return max;
+
+O(n) spatiale
+O(n2) temporelle
+
+Question 17
+Donner un (meilleur) algorithme de type « diviser pour régner ». Quelle est sa complexité ?
+
+O(nLogn) time
+relation de recurrence T(n) = 2T(n/2) + Θ(n)
+
+// Find the maximum possible sum in arr[] auch that arr[m] is part of it
+int maxCrossingSum(int arr[], int l, int m, int h)
+{
+    // Include elements on left of mid.
+    int sum = 0;
+    int left_sum = INT_MIN;
+    for (int i = m; i >= l; i--)
+    {
+        sum = sum + arr[i];
+        if (sum > left_sum)
+          left_sum = sum;
+    }
+
+    // Include elements on right of mid
+    sum = 0;
+    int right_sum = INT_MIN;
+    for (int i = m+1; i <= h; i++)
+    {
+        sum = sum + arr[i];
+        if (sum > right_sum)
+          right_sum = sum;
+    }
+
+    // Return sum of elements on left and right of mid
+    return left_sum + right_sum;
+}
+
+// Returns sum of maxium sum subarray in aa[l..h]
+int maxSubArraySum(int arr[], int l, int h)
+{
+   // Base Case: Only one element
+   if (l == h)
+     return arr[l];
+
+   // Find middle point
+   int m = (l + h)/2;
+
+   /* Return maximum of following three possible cases
+      a) Maximum subarray sum in left half
+      b) Maximum subarray sum in right half
+      c) Maximum subarray sum such that the subarray crosses the midpoint */
+   return max(maxSubArraySum(arr, l, m),
+              maxSubArraySum(arr, m+1, h),
+              maxCrossingSum(arr, l, m, h));
+}
+
+int max_sum = maxSubArraySum(arr, 0, n-1);
+
+1) Divide the given array in two halves
+2) Return the maximum of following three
+….a) Maximum subarray sum in left half (Make a recursive call)
+….b) Maximum subarray sum in right half (Make a recursive call)
+….c) Maximum subarray sum such that the subarray crosses the midpoint
+
+
+Question 18
+Reproduire le même type d’expérimentations que les précédentes pour ce problème. Que conclure de ces
+expérimentations.
+
+
+ Divide the array into two parts.
+Find maximum subarray sum for left half recursively.
+Find maximum subarray sum for right half recursively.
+Find maximum subarray sum for the subarray including the middle element. (Sum of last two steps)
+Return the maximum of the last three results.
+
+public static int FindMaxSumSubArray(int[] array, int low, int high){
+
+     /* No element in the array */
+     if (low > high)
+        return 0;
+     /* One element in the array */
+     if (low == high)
+        return max(0, array[low]);
+
+     /* Middle element of the array */
+     int middle = (low + high) / 2;
+
+     /* find maximum sum crossing to left */
+     leftMax = sum = 0;
+     for (i = middle; i ≥ low; i--) {
+        sum += array[i];
+        if (sum > leftMax)
+            leftMax = sum;
+     }
+
+     /* find maximum sum crossing to right */
+     rightMax = sum = 0;
+     for (i = middle+1; i ≤ high; i++) {
+        sum += array[i];
+        if (sum > rightMax)
+            rightMax = sum;
+     }
+
+     /* Return the maximum of leftMax, rightMax and their sum */
+     return Math.max(leftMax + rightMax,
+     Math.max(FindMaxSumSubArray(low, middle), FindMaxSumSubArray(middle+1, high)));
+ }

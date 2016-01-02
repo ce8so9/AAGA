@@ -1,0 +1,21 @@
+Question 11 Choisir l’un des deux problèmes pour la suite de la section.
+Exponentiation rapide
+
+ et Recherche dans un tableau trié
+
+Question 12 Expliciter et expliquer les deux algorithmes résolvant ce problème, le naïf et celui qui est optimisé.
+
+Question 13
+Prouver la complexité (avec pour mesure le nombre de multiplication pour l’exponentiation ou le nombre
+de comparaisons pour la recherche) de chacun des deux algorithmes.
+
+A brief analysis of this formula (an intuitive analysis if you prefer), based both on its recursive formulation and on its
+ implementation allows us to see that the formula uses only O(log2n) squarings and O(log2n) multiplications!
+
+Question 14
+Reproduire les expérimentations réalisées par les auteurs de l’article. Analyser les résultats obtenus. On
+utilisera le même langage de programmation et les mêmes caractéristiques concernant les tableaux pris en arguments.
+
+Question 15
+Que se passe-t-il si on change de langage de programmation ou de types d’arguments ? On s’appuiera sur
+des expérimentations.

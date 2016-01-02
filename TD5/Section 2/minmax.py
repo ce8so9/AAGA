@@ -42,18 +42,14 @@ def main():
 
         with Timer() as t:
             res = naive_min_max(test)
-        # print("=> naive : {0} ms".format(t.msecs))
         naive_times.append(t.msecs)
 
         with Timer() as t:
             res = min_max_32(test)
-        # print("=> optimized : {0} ms".format(t.msecs))
         opt_times.append(t.msecs)
 
     import matplotlib.pyplot as plt
 
-    # fig1, ax1 = plt.subplots()
-    # fig2, ax2 = plt.subplots()
     plt.plot(range(1, args.N), naive_times)
     plt.plot(range(1, args.N), opt_times)
     plt.show()

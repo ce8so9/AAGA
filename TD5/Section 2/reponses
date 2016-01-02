@@ -1,0 +1,36 @@
+Question 4 Expliciter et expliquer les deux algorithmes, le naïf et celui qui est optimisé (en nombre de comparaisons).
+
+Opt:
+If n is odd then initialize min and max as first element.
+If n is even then initialize min and max as minimum and maximum of the first two elements respectively.
+For rest of the elements, pick them in pairs and compare their
+maximum and minimum with max and min respectively.
+
+
+Question 5 Prouver la complexité en nombre de comparaisons de chacun des deux algorithmes.
+
+Naif : Time Complexity: O(n) In this method, total number of comparisons is 1 + 2(n-2) in worst case and 1 + n – 2 in best case.
+
+Opt : Time Complexity: O(n)
+
+       If n is odd/even:    3*(n-1)/2  
+
+Question 6
+Reproduire les expérimentations réalisées par les auteurs de l’article. Analyser les résultats obtenus. On
+utilisera le même langage de programmation et les mêmes caractéristiques concernant les tableaux pris en arguments.
+
+Question 7
+Décrire l’analyse de complexité, pour le modèle de prédicteur 1-bit, permettant de s’approcher d’un point
+de vue théorique des résultats expérimentaux de l’article.
+
+Question 8
+Reproduire ces expérimentations dans un autre langage de programmation (éventuellement dans plusieurs
+autres langages), mais toujours sur le même type d’arguments.
+
+Question 9
+En utilisant la Section 2 (exercice 2) du TD 4, reproduire ces expérimentation dans le langage de votre
+choix, mais sur des tableaux (pris en arguments) contenant des arbres unaires-binaires. Afin de comparer les arbres, on
+utilisera la question 2.4 de cet exercice.
+
+Question 10
+Expliquer la complexité temporelle en pratique des deux algorithmes (le naïf et le plus astucieux).
