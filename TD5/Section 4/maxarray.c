@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
+#include <assert.h>
 #include <limits.h>
 #include "../c_timer/timer.h"
 
@@ -9,7 +10,6 @@ int *ALEA;
 
 void randomize(int *T, int n, int LOW, int HIGH) {
     int i;
-    srand(time(NULL));
     for(i=0;i<n;i++){
         T[i] = rand() % (HIGH - LOW + 1) + LOW;
     }
@@ -17,7 +17,7 @@ void randomize(int *T, int n, int LOW, int HIGH) {
 
 void init(int NBR) {
     ALEA = (int*)calloc(NBR,sizeof(int));
-    randomize(ALEA, NBR, -2000000000, 2000000000);
+    randomize(ALEA, NBR, -2000, 2000);
 }
 
 int
@@ -36,45 +36,61 @@ naive_max_array_sum(int *T, int N) {
     return max;
 }
 
+// A utility funtion to find maximum of two integers
+int max2(int a, int b) { return (a > b)? a : b; }
+ 
+// A utility funtion to find maximum of three integers
+int max3(int a, int b, int c) { return max2(max2(a, b), c); }
+ 
+// Find the maximum possible sum in arr[] auch that arr[m] is part of it
 int
-max(int x, int y) {
-    if (x < y)
-        return y;
-    return x;
+maxCrossingSum(int arr[], int l, int m, int h)
+{
+    // Include elements on left of mid.
+    int sum = 0;
+    int left_sum = INT_MIN;
+    for (int i = m; i >= l; i--)
+    {
+        sum = sum + arr[i];
+        if (sum > left_sum)
+          left_sum = sum;
+    }
+ 
+    // Include elements on right of mid
+    sum = 0;
+    int right_sum = INT_MIN;
+    for (int i = m+1; i <= h; i++)
+    {
+        sum = sum + arr[i];
+        if (sum > right_sum)
+          right_sum = sum;
+    }
+ 
+    // Return sum of elements on left and right of mid
+    return left_sum + right_sum;
 }
 
 int
-opt_max_array_sum(int *T, int low, int high) {
-
-    if (low > high)
-        return 0;
-
-    if (low == high)
-        return max(0, T[low]);
-
-    int middle = (low + high) / 2;
-    int i = -1;
-
-    /* find maximum sum crossing to left */
-    int leftMax, rightMax, sum = 0;
-    for (i = middle; i >= low; i--) {
-        sum += T[i];
-        if (sum > leftMax)
-            leftMax = sum;
-    }
-
-    /* find maximum sum crossing to right */
-    for (i = middle+1; i <= high; i++) {
-        sum += T[i];
-        if (sum > rightMax)
-            rightMax = sum;
-    }
-
-    /* Return the maximum of leftMax, rightMax and their sum */
-    return max(leftMax + rightMax, max(opt_max_array_sum(T, low, middle), opt_max_array_sum(T, middle+1, high)));
+maxSubArraySum(int arr[], int l, int h)
+{
+   // Base Case: Only one element
+   if (l == h)
+     return arr[l];
+ 
+   // Find middle point
+   int m = (l + h)/2;
+ 
+   /* Return maximum of following three possible cases
+      a) Maximum subarray sum in left half
+      b) Maximum subarray sum in right half
+      c) Maximum subarray sum such that the subarray crosses the midpoint */
+   return max3(maxSubArraySum(arr, l, m),
+              maxSubArraySum(arr, m+1, h),
+              maxCrossingSum(arr, l, m, h));
 }
 
-void test(int count){
+void
+test(int count){
     srand(time(NULL));
     int i = -1;
     char buffer[50];
@@ -82,22 +98,31 @@ void test(int count){
     FILE *pFile = NULL;
     pFile = fopen("maxarrdata.txt", "w");
 
-    for (i = 0; i < count; i = i+100) {
+    int naive_res = -1;
+    int opt_res = -1;
+    srand(time(NULL));
+    for (i = 1; i < count; i = i + 1000) {
         init(i);
         init_timer;
 
         first_step_timer;
-        naive_max_array_sum(ALEA, i);
+        naive_res = naive_max_array_sum(ALEA, i);
         second_step_timer;
         snprintf(buffer, sizeof(buffer), "%d %lf ", i, tim1);
+        //printf("%d\n", naive_res);
 
         first_step_timer;
-        opt_max_array_sum(ALEA, 0, i-1);
+        opt_res = maxSubArraySum(ALEA, 0, i-1);
         second_step_timer;
         snprintf(buffer+strlen(buffer), sizeof(buffer), "%lf\n", tim1);
+        //printf("%d\n", opt_res);
 
         buffer[strlen(buffer)] = '\0';
         fwrite(buffer, sizeof(char), strlen(buffer), pFile);
+
+        free(ALEA);
+        ALEA = NULL;
+        assert(naive_res == opt_res);
     }
 
     fclose(pFile);

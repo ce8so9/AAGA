@@ -37,21 +37,25 @@ def main():
     opt_times = []
     naive_times = []
 
-    for i in range(1, args.N):
+    for i in range(1, args.N, 1000000):
         test = gen_array(i)
 
         with Timer() as t:
             res = naive_min_max(test)
-        naive_times.append(t.msecs)
+        naive_times.append(t.secs)
 
         with Timer() as t:
             res = min_max_32(test)
-        opt_times.append(t.msecs)
+        opt_times.append(t.secs)
 
     import matplotlib.pyplot as plt
 
-    plt.plot(range(1, args.N), naive_times)
-    plt.plot(range(1, args.N), opt_times)
+    naive_plot = plt.plot(range(1, args.N, 1000000), naive_times, label="Naive mix & max")
+    opt_plot = plt.plot(range(1, args.N, 1000000), opt_times, label="Optimized min & max")
+    plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
+           ncol=2, mode="expand", borderaxespad=0.)
+    plt.xlabel('array size')
+    plt.ylabel('time (in sec)')
     plt.show()
 
 if __name__ == "__main__":

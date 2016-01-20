@@ -1,9 +1,0 @@
-A technique used in some processors with instruction prefetch to guess whether a conditional branch will be taken or not and prefetch code from the appropriate location.
-When a branch instruction is executed, its address and that of the next instruction executed (the chosen destination of the branch)
- are stored in the Branch Target Buffer. This information is used to predict which way the instruction
- will branch the next time it is executed so that instruction prefetch can continue.
-
-A method whereby a processor guesses the outcome of a branch instruction so that it can prepare in advance to carry out the instructions that follow the predicted outcome.
-
-If the CPU guesses the wrong branch, it will take extra machine cycles to go back and execute the correct one; however, on average, if the prediction algorithms are good, overall performance is increased.
-

@@ -1,0 +1,134 @@
+\documentclass[paper=a4, fontsize=11pt]{scrartcl}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{fourier}
+
+\usepackage[frenchb]{babel}
+
+\usepackage[protrusion=true,expansion=true]{microtype}
+\usepackage{amsmath,amsfonts,amsthm} % Math packages
+\usepackage[pdftex]{graphicx}
+\usepackage{url}
+
+
+%%% Custom sectioning
+\usepackage{sectsty}
+\allsectionsfont{\centering \normalfont\scshape}
+
+
+%%% Custom headers/footers (fancyhdr package)
+\usepackage{fancyhdr}
+\pagestyle{fancyplain}
+\fancyhead{}											% No page header
+\fancyfoot[L]{}											% Empty
+\fancyfoot[C]{}											% Empty
+\fancyfoot[R]{\thepage}									% Pagenumbering
+\renewcommand{\headrulewidth}{0pt}			% Remove header underlines
+\renewcommand{\footrulewidth}{0pt}				% Remove footer underlines
+\setlength{\headheight}{13.6pt}
+
+
+%%% Equation and float numbering
+\numberwithin{equation}{section}		% Equationnumbering: section.eq#
+\numberwithin{figure}{section}			% Figurenumbering: section.fig#
+\numberwithin{table}{section}				% Tablenumbering: section.tab#
+
+
+%%% Maketitle metadata
+\newcommand{\horrule}[1]{\rule{\linewidth}{#1}} 	% Horizontal rule
+
+\title{
+		%\vspace{-1in}
+		\usefont{OT1}{bch}{b}{n}
+		\normalfont \normalsize \textsc{UPMC Master 2 STL} \\ [25pt]
+		\horrule{0.5pt} \\[0.4cm]
+		\huge Rapport de projet AAGA \\
+		\horrule{2pt} \\[0.5cm]
+}
+\author{
+		\normalfont 								\normalsize
+        Elias Boutaleb\\[-3pt]		\normalsize
+        \today
+}
+\date{}
+
+
+%%% Begin document
+\begin{document}
+\maketitle
+
+\begin{enumerate}
+\section{Idées maîtresses de l’article}
+	\item
+
+On étudie des cas d'algorithmes dont les versions naïves sont plus rapides que leurs équivalents optimisés. \\
+
+Ceci est dû à plusieurs facteurs :
+
+- L'utilisation de prédicteurs de branchements dans les processeurs modernes.
+
+- Une erreur de prédiction d'un branchement est plus coûteuse en cycles machines que une comparaison.
+
+- Les versions optimisées des algorithmes réduisent le nombre de comparaisons effectués, mais produisent des branchements dont le résultat ne peut être prédit (qui ont des probabilités égales de sauter ou non), de par la nature des algorithmes de prédiction utilisés, (compteur à saturation, prédicteurs k-bits). \\
+
+Ceci résulte en une augmentation des erreurs de prédictions et une perte de performance chez les algorithmes optimisés.
+Les versions naïves des algorithmes présentés font plus de comparaisons, mais produisent moins d'erreurs de prédictions.
+
+Des algorithmes biaisés de recherche dichotomique et d'exponentiation rapide qui réduisent le nombre d'erreurs de prédictions sont donc proposés, accompagnés de preuves qui démontrent combien d'erreurs de prédictions sont faites pour chaque version.
+
+\clearpage
+
+    \item Le prédicteur d'un processeur permet de deviner le résultat d'un branchement (donc si l'éxécution d'une instruction résulte en un saut à une autre adresse ou non). \\
+        L'adresse du saut est conservée par l'unité de prédiction, qui précharge l'instruction contenue à cette adresse. Le prédicteur applique ensuite un algorithme sur ces données pour déterminer le branchement à effectuer. \\
+        Si le processeur a prédit la mauvaise branche, il faudra corriger l'erreur de prédiction, ce qui prendra des cycles machines en plus. \\
+        Si la plupart des prédictions faites sont correctes, cela se traduit par une meilleure performance du processeur. \\
+
+	\item 
+
+On distingue 3 types de prédicteurs: \\
+\begin{itemize}
+\item le prédicteur 1-bit retient l'éxecution précédente du branchement et parie sur le fait que la prochaine
+éxecution du branchement donnera le même résultat. \\
+
+\item le prédicteur 2-bit retient les 2 dernières éxecutions d'un branchement. \\
+Dans le cas du compteur à saturation, on compte le nombre de fois que un branchement est pris, si il est pris,
+on l'incrémente, s'il est non-pris, on le décrémente. \\
+Si la valeur du compteur est supérieure à la moitié de sa valeur maximale possible, on pariera que le saut est pris.
+Sinon, on pariera que le saut n'est pas pris.\\
+On peut généraliser cela aux prédicteurs k-bit qui retiennent les k dernières éxecutions d'un branchement avec \(2^k\) états. \\
+
+\item le prédicteur de branchement adaptatif à deux niveaux, qui utilise un registre d'historique à n bits (history table)
+qui retient l'éxecution des n derniers branchements (c'est un registre à décalage qui fonctionne comme une queue). \\
+Il dispose donc de \(2^n\) entrées, et à chaque entrée du registre on associe un prédicteur k-bit. \\
+Ainsi, pour une valeur donnée du registre (par exemple 1001), le compteur associé à cette valeur déterminera
+si le branchement est pris ou non.
+
+\end{itemize}
+
+
+\section{Min et Max d’un tableau}
+	\item Third item in a list
+   	\item First item in a list
+	\item Second item in a list
+	\item Third item in a list
+    \item First item in a list
+	\item Second item in a list
+	\item Third item in a list
+
+\section{Exponentiation rapide}
+
+	\item Third item in a list
+   	\item First item in a list
+	\item Second item in a list
+	\item Third item in a list
+    \item First item in a list
+
+\section{Au-delà de l’article}
+\subsection{Somme maximale}
+	\item Third item in a list
+   	\item First item in a list
+   	\item First item in a list
+
+\end{enumerate}
+
+\end{document}

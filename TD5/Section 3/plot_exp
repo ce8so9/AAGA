@@ -1,7 +1,17 @@
 #!/usr/bin/gnuplot
 
-set title "Exponentiation by squaring"
-set xlabel "Array size"
-set ylabel "Execution time"
-plot 'expdata.txt' using 1:2 with lines title 'Optimized', 'data.txt' using 1:3 with lines title 'Naive'
+clear
+reset
+unset key
+# Make the x axis labels easier to read.
+set xtics rotate out
+# Select histogram data
+set style data histogram
+# Give the bars a plain fill pattern, and draw a solid line around them.
+set style fill solid border
+
+set title "Exponentiation by squaring with 5E7 computations"
+set ylabel "Execution time in secs"
+plot 'expdata.txt' using 2:xticlabels(1) 
+
 pause -1 "Hit any key to continue"

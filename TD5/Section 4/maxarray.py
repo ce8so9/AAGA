@@ -5,7 +5,7 @@ import random
 from timer import Timer
 
 def gen_array(size):
-   return [random.randint(1, 2**30) for i in range(size)]
+   return [random.randint(-2**31, 2**31) for i in range(size)]
 
 def max_subarray_sum_naive(arr):
     N = len(arr)
@@ -27,7 +27,7 @@ def max_subarray_sum_opt(array, low, high):
          return 0
      # One element in the array
      if low == high:
-         return max(0, array[low])
+         return array[low]#max(0, array[low])
 
      # Middle element of the array */
      middle = (low + high) // 2
@@ -59,21 +59,32 @@ def main():
     opt_times = []
     naive_times = []
 
-    for i in range(1, args.N):
+    naive_res = 0
+    opt_res = 0
+
+    for i in range(1, args.N, 1000):
         test = gen_array(i)
 
         with Timer() as t:
-            max_subarray_sum_naive(test)
-        naive_times.append(t.msecs)
+            naive_res = max_subarray_sum_naive(test)
+        naive_times.append(t.secs)
 
         with Timer() as t:
-            max_subarray_sum_opt(test, 0, len(test) - 1)
-        opt_times.append(t.msecs)
+            opt_res = max_subarray_sum_opt(test, 0, len(test) - 1)
+        opt_times.append(t.secs)
+        print(naive_res)
+        print(opt_res)
+
+        assert(naive_res == opt_res)
 
     import matplotlib.pyplot as plt
 
-    plt.plot(range(1, args.N), naive_times)
-    plt.plot(range(1, args.N), opt_times)
+    plt.plot(range(1, args.N, 1000), naive_times, label="Naive max subarray sum")
+    plt.plot(range(1, args.N, 1000), opt_times, label="Optimized max subarray sum")
+    plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
+           ncol=2, mode="expand", borderaxespad=0.)
+    plt.xlabel('array size')
+    plt.ylabel('time (in secs)')
     plt.show()
 
 if __name__ == "__main__":

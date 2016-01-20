@@ -89,7 +89,7 @@ void test(int n){
     FILE *pFile = NULL;
     pFile = fopen("data.txt", "w");
 
-    for (i = 1; i < n; i += 100) {
+    for (i = 1; i < n; i += 100000) {
         init(i);
         init_timer;
 
@@ -107,6 +107,8 @@ void test(int n){
 
         buffer[strlen(buffer)] = '\0';
         fwrite(buffer , sizeof(char), strlen(buffer), pFile);
+
+        free(ALEA);
     }
 
     fclose(pFile);

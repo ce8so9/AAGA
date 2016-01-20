@@ -40,16 +40,15 @@ def guidedpow(x, n):
 
 def gen_times(fn, nb_its):
 
-    res = []
+    res = 0
+    x = float(2)
 
     for i in range(nb_its):
-
-        x = 0.5
         n = random.randint(0, 2**26 - 1)
 
         with Timer() as t:
             fn(x, n)
-        res.append(t.msecs)
+        res = res + t.secs
 
     return res
 
@@ -61,15 +60,30 @@ def main():
 
     args = parser.parse_args()
 
-    classical_times = gen_times(classicalpow, args.N)
-    unrolled_times = gen_times(unrolledpow, args.N)
-    guided_times = gen_times(guidedpow, args.N)
+    classical_time = gen_times(classicalpow, args.N)
+    unrolled_time = gen_times(unrolledpow, args.N)
+    guided_time = gen_times(guidedpow, args.N)
+
+    res = [classical_time, unrolled_time, guided_time]
+
+    ind = range(3)
+    width = 0.35
 
     import matplotlib.pyplot as plt
 
-    plt.plot(range(1, args.N), classical_times)
-    plt.plot(range(1, args.N), unrolled_times)
-    plt.plot(range(1, args.N), guided_times)
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    rects1 = ax.bar(ind, res, width, color='red')
+
+    ax.set_xlim(-width,len(ind)+width)
+    ax.set_ylabel('Execution time (en secs)')
+    ax.set_title('exponentiation by squaring performance (5M computations)')
+
+    xTickMarks = ['Classical', 'Unrolled', 'Guided']
+    ax.set_xticks(list(map(lambda x : x + width, ind)))
+    xtickNames = ax.set_xticklabels(xTickMarks)
+    plt.setp(xtickNames, rotation=45, fontsize=10)
+
     plt.show()
 
 if __name__ == "__main__":

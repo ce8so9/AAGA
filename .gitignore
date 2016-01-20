@@ -1,6 +1,9 @@
 **/__pycache__/
 *.png
 a.out
-data.txt
 *.pdf
 *.swp
+*.log
+*.aux
+*.txt
+.gdb_history

@@ -1,10 +1,12 @@
 Question 4 Expliciter et expliquer les deux algorithmes, le naïf et celui qui est optimisé (en nombre de comparaisons).
 
+Algorithme naf : on a deux variables qui traquent l'élément le plus petit et l'élément le plus grand du tableau, puis on itére sur le tableau en comparant chaque élément du tableau avec ces 2 variables.
+Les variables sont mises à jour suivant si l'élément en question est plus petit ou plus grand que l'élément le plus petit ou le plus grand courant.
+
 Opt:
-If n is odd then initialize min and max as first element.
-If n is even then initialize min and max as minimum and maximum of the first two elements respectively.
-For rest of the elements, pick them in pairs and compare their
-maximum and minimum with max and min respectively.
+
+Initialiser min et max en tant que dernier élément du tableau.
+Itérer sur le tableau par paire de deux éléments, et comparer le minimum et maximum de cette paire avec les variables courantes min et max.
 
 
 Question 5 Prouver la complexité en nombre de comparaisons de chacun des deux algorithmes.
@@ -13,7 +15,7 @@ Naif : Time Complexity: O(n) In this method, total number of comparisons is 1 + 
 
 Opt : Time Complexity: O(n)
 
-       If n is odd/even:    3*(n-1)/2  
+       If n is odd/even:    3*(n-1)/2
 
 Question 6
 Reproduire les expérimentations réalisées par les auteurs de l’article. Analyser les résultats obtenus. On

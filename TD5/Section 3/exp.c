@@ -61,35 +61,43 @@ void test(int count){
     srand(time(NULL));
     int i = -1;
     char buffer[50];
-    float x = 1.5;
+    float x = 2;
     int n = -1;
 
     FILE *pFile = NULL;
     pFile = fopen("expdata.txt", "w");
 
+    init_timer;
+    first_step_timer;
     for (i = 0; i < count; i++) {
         // 67108864 = 2**26
         n = (float)rand()/((float)RAND_MAX) * 67108863;
-        init_timer;
-
-        first_step_timer;
         classicalpow(x, n);
-        second_step_timer;
-        snprintf(buffer, sizeof(buffer), "%d %lf ", i, tim1);
-
-        first_step_timer;
-        unrolledpow(x, n);
-        second_step_timer;
-        snprintf(buffer+strlen(buffer), sizeof(buffer), "%lf\n", tim1);
-
-        first_step_timer;
-        guidedpow(x, n);
-        second_step_timer;
-        snprintf(buffer+strlen(buffer), sizeof(buffer), "%lf\n", tim1);
-
-        buffer[strlen(buffer)] = '\0';
-        fwrite(buffer, sizeof(char), strlen(buffer), pFile);
     }
+    second_step_timer;
+    snprintf(buffer, sizeof(buffer), "%s %lf\n", "Classical", tim1);
+    buffer[strlen(buffer)] = '\0';
+    fwrite(buffer, sizeof(char), strlen(buffer), pFile);
+
+    first_step_timer;
+    for (i = 0; i < count; i++) {
+        n = (float)rand()/((float)RAND_MAX) * 67108863;
+        unrolledpow(x, n);
+    }
+    second_step_timer;
+    snprintf(buffer, sizeof(buffer), "%s %lf\n", "Unrolled", tim1);
+    buffer[strlen(buffer)] = '\0';
+    fwrite(buffer, sizeof(char), strlen(buffer), pFile);
+
+    first_step_timer;
+    for (i = 0; i < count; i++) {
+        n = (float)rand()/((float)RAND_MAX) * 67108863;
+        guidedpow(x, n);
+    }
+    second_step_timer;
+    snprintf(buffer, sizeof(buffer), "%s %lf\n", "Guided", tim1);
+    buffer[strlen(buffer)] = '\0';
+    fwrite(buffer, sizeof(char), strlen(buffer), pFile);
 
     fclose(pFile);
 }

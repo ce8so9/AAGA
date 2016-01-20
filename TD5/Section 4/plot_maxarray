@@ -2,6 +2,6 @@
 
 set title "Maximum subarray sum"
 set xlabel "Array size"
-set ylabel "Time in msec"
+set ylabel "Time in secs"
 plot 'maxarrdata.txt' using 1:2 with lines title 'Naive', 'maxarrdata.txt' using 1:3 with lines title 'Optimized'
 pause -1 "Hit any key to continue"
