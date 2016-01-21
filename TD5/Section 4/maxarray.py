@@ -62,7 +62,7 @@ def main():
     naive_res = 0
     opt_res = 0
 
-    for i in range(1, args.N, 1000):
+    for i in range(1, args.N, 10000):
         test = gen_array(i)
 
         with Timer() as t:
@@ -72,15 +72,13 @@ def main():
         with Timer() as t:
             opt_res = max_subarray_sum_opt(test, 0, len(test) - 1)
         opt_times.append(t.secs)
-        print(naive_res)
-        print(opt_res)
 
         assert(naive_res == opt_res)
 
     import matplotlib.pyplot as plt
 
-    plt.plot(range(1, args.N, 1000), naive_times, label="Naive max subarray sum")
-    plt.plot(range(1, args.N, 1000), opt_times, label="Optimized max subarray sum")
+    plt.plot(range(1, args.N, 10000), naive_times, label="Naive max subarray sum")
+    plt.plot(range(1, args.N, 10000), opt_times, label="Optimized max subarray sum")
     plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
            ncol=2, mode="expand", borderaxespad=0.)
     plt.xlabel('array size')

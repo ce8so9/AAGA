@@ -44,7 +44,7 @@ int max3(int a, int b, int c) { return max2(max2(a, b), c); }
  
 // Find the maximum possible sum in arr[] auch that arr[m] is part of it
 int
-maxCrossingSum(int arr[], int l, int m, int h)
+max_crossing_sum(int arr[], int l, int m, int h)
 {
     // Include elements on left of mid.
     int sum = 0;
@@ -71,7 +71,7 @@ maxCrossingSum(int arr[], int l, int m, int h)
 }
 
 int
-maxSubArraySum(int arr[], int l, int h)
+max_subarray_sum(int arr[], int l, int h)
 {
    // Base Case: Only one element
    if (l == h)
@@ -84,9 +84,9 @@ maxSubArraySum(int arr[], int l, int h)
       a) Maximum subarray sum in left half
       b) Maximum subarray sum in right half
       c) Maximum subarray sum such that the subarray crosses the midpoint */
-   return max3(maxSubArraySum(arr, l, m),
-              maxSubArraySum(arr, m+1, h),
-              maxCrossingSum(arr, l, m, h));
+   return max3(max_subarray_sum(arr, l, m),
+              max_subarray_sum(arr, m+1, h),
+              max_crossing_sum(arr, l, m, h));
 }
 
 void
@@ -112,7 +112,7 @@ test(int count){
         //printf("%d\n", naive_res);
 
         first_step_timer;
-        opt_res = maxSubArraySum(ALEA, 0, i-1);
+        opt_res = max_subarray_sum(ALEA, 0, i-1);
         second_step_timer;
         snprintf(buffer+strlen(buffer), sizeof(buffer), "%lf\n", tim1);
         //printf("%d\n", opt_res);

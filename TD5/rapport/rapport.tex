@@ -11,6 +11,7 @@
 \usepackage{url}
 \usepackage{enumitem}
 
+\usepackage{listings}
 
 %%% Custom sectioning
 \usepackage{sectsty}
@@ -129,11 +130,59 @@ de 2n - 2 comparaisons.
 est parcouru deux par deux éléments. Un total de \(\frac{3(n - 1)}{2}\) comparaisons est fait.
 \end{itemize}
 
-	\item Second item in a list
-	\item Third item in a list
-    \item First item in a list
-	\item Second item in a list
-	\item Third item in a list
+	\item 
+Les résultats semblent correspondre à ceux des expérimentations réalisées par les auteurs de l'article.
+On observe que l'algorithme naïf est à peu près deux fois plus rapide que l'algorithme optimisé.
+
+\begin{figure}[!ht]
+  \caption{Performance des implémentations en C des deux algorithmes}
+\centering\includegraphics[width=0.75\textwidth]{minmax10m_c.png}
+\end{figure}
+
+\item On veut montrer que le nombre d'erreurs de prédictions fait par le Minmax naïf est asymptotiquement équivalent à $4\log n$, et que le nombre d'erreurs de prédictions fait par le Minmax $\frac{3}{2}$ est asymptotiquement équivalent à $\frac{n}{4}$.
+
+\begin{itemize}
+\item Version naïve :
+
+\begin{itemize}[label=$\bullet$]
+\item On établit une correspondance entre les éléments d'une permutation et les cycles d'un graphe. \\
+Pour cela, on définit une bijection f qui part de l'ensemble des permutations de taille n vers lui-même tel
+que le nombre de min-records dans $f(\sigma)$ soit égal au nombre de cycles de $\sigma$.
+\item Pour $\zeta$ une variable aléatoire réelle à valeur dans l'ensemble de permutations uniformes aléatoires,
+on considère son espérance $E_n[\zeta]$.
+
+\item On veut compter le nombre d'erreurs de prédictions $\zeta(f(\sigma))$ provoqué par la ligne 3 de l'algorithme naïf cycle par cycle.
+\item On compte au total 4 erreurs de prédictions suivant l'état de départ du prédicteur et la longueur des cycles étudiés.
+\item Le nombre d'erreurs de prédictions de $f(\sigma)$ est égal à quatre fois le nombre de cycles de la permutation $\sigma$ $(Cyc)$.
+\item L'espérance de Cyc $E_n[Cyc]$ étant équivalent à $\log n$, on en déduit que le Minmax naïf fait en moyenne $4\log n$ erreurs de prédiction.
+\end{itemize}
+
+\item Version optimisée : 
+
+Le premier test en ligne 3 de l'algorithme $\frac{3}{2}-MINMAX$ provoque une erreur de prédiction avec une probabilité de
+$\frac{1}{2}$, comme ce test est répété sur tout le tableau deux par deux éléments, $\frac{3}{2}-MINMAX$ provoque $\frac{1}{2} \frac{n}{2} = \frac{n}{4}$
+erreurs de prédiction.
+\end{itemize}
+
+
+    \item Les expérimentations ont été reproduites en utilisant Python. \\
+            L'algorithme optimisé est plus lent, mais l'écart avec la version naïve est moindre
+            comparé à l'implémentation en C.
+
+\begin{figure}[!ht]
+  \caption{Performance des implémentations en Python des deux algorithmes}
+\centering\includegraphics[width=0.75\textwidth]{minmax10m_py.png}
+\end{figure}
+
+	\item On devrait s'attendre à ce que l'algorithme naïf soit moins performant que l'algorithme optimisé en nombre de comparaisons. \\
+    Mais l'implémentation de l'algorithme de comparaison des arbres unaire-binaires attendue n'est pas correcte.
+
+\begin{figure}[!ht]
+  \caption{Performance des implémentations des deux algorithmes en Python opérant sur des arbres unaires-binaires.}
+\centering\includegraphics[width=0.75\textwidth]{aubminmax200k_py.png}
+\end{figure}
+
+	\item Voir 5.
 
 \section{Exponentiation rapide}
 
@@ -152,16 +201,47 @@ x en paramètres. On distingue 3 cas pour n:
 \end{itemize}
 \end{itemize}
 
-	\item
+	\item{
 \begin{itemize}
     \item La version naïve a une complexité temporelle linéaire en \BigO{n} avec n - 1 multiplications.
     \item
  La version optimisée a une complexité temporelle en \BigO{\log _2 \left( n \right )}, avec
     au plus $\lfloor \log _2 \left( n \right ) \rfloor$ multiplications et $\lfloor \log _2 \left( n \right ) \rfloor$ élévations au carré.
-\end{itemize}
+\end{itemize}}
 
-	\item Third item in a list
-    \item First item in a list
+\clearpage
+
+	\item Les résultats semblent correspondre à ceux des expérimentations réalisées par les auteurs de l'article.
+
+\begin{figure}[h]
+  \caption{Performance des algorithmes d'exponentiation rapide en C (50 millions de calculs)}
+\centering\includegraphics[width=0.75\textwidth]{expsqu50m_c.png}
+\end{figure}
+
+    \item Les implémentations Python sont plus lentes, mais en plus les vitesses d'éxecution des
+ différentes implémentations ne diffèrent pas tant que cela. Ici, l'algorithme guidé est même plus
+rapide que l'algorithme déroulé, alors que en C il s'agit de l'algorithme le plus rapide.
+Serait-ce dû à l'utilisation d'un language interprêté? Les opérations logiques semblent plus rapides
+que des divisions entières.
+
+\lstset{language=bash}          
+\begin{lstlisting}[frame=single]
+% python3 -m timeit -n 100000000 -s 'x = 47' 'x // 2'
+100000000 loops, best of 3: 0.0597 usec per loop
+% python3 -m timeit -n 100000000 -s 'x = 47' 'x >> 1'
+100000000 loops, best of 3: 0.0485 usec per loop
+% python3 -m timeit -n 100000000 -s 'x = 47' 'x // 4' 
+100000000 loops, best of 3: 0.0601 usec per loop
+% python3 -m timeit -n 100000000 -s 'x = 47' 'x >> 2'
+100000000 loops, best of 3: 0.048 usec per loop
+\end{lstlisting}
+
+\clearpage
+
+\begin{figure}[h]
+  \caption{Performance des algorithmes d'exponentiation rapide en Python (50 millions de calculs)}
+\centering\includegraphics[width=0.75\textwidth]{expsqu50m_py.png}
+\end{figure}
 
 \section{Au-delà de l’article}
 \subsection{Somme maximale}
@@ -191,7 +271,21 @@ du milieu du tableau.
 à partir de la relation de récurrence $ T(n) = 2 \cdot T(n/2) + \theta (n)$ et du cas 2 du théorème maître.
 \end{itemize}
 
-   	\item First item in a list
+   	\item Les résultats sont surprenants : pourquoi est-ce la version optimisée s'éxecute en temps constant,
+et pourtant donne les mêmes résultats que la version naïve en C comme en Python?
+Cela ne correspond pas à ce qui a été prédit précédemment.
+En tout cas, l'algorithme de somme maximale ne semble pas être handicapé par les erreurs de prédictions.
+
+\begin{figure}[h]
+  \caption{Performance des algorithmes de somme maximale en C}
+\centering\includegraphics[width=1\textwidth]{subarray100k_c.png}
+\end{figure}
+
+\begin{figure}[h]
+  \caption{Performance des algorithmes de somme maximale en Python}
+\centering\includegraphics[width=1\textwidth]{subarray100k_py.png}
+\end{figure}
+
 
 \end{enumerate}
 

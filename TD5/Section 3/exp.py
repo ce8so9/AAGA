@@ -77,7 +77,7 @@ def main():
 
     ax.set_xlim(-width,len(ind)+width)
     ax.set_ylabel('Execution time (en secs)')
-    ax.set_title('exponentiation by squaring performance (5M computations)')
+    ax.set_title('exponentiation by squaring performance (50M computations)')
 
     xTickMarks = ['Classical', 'Unrolled', 'Guided']
     ax.set_xticks(list(map(lambda x : x + width, ind)))

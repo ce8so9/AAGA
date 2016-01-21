@@ -6,10 +6,7 @@ import argparse
 import pydot
 import math
 
-# graph = pydot.Dot(graph_type="digraph")
 graph = pydot.Dot(graph_type='digraph', nodesep=.75)
-array_and_mat = None
-
 node_index = 1
 
 class AUB():
@@ -17,6 +14,7 @@ class AUB():
       self.left = None
       self.right = None
       self.key = key
+      self.number = -1
 
     @staticmethod
     def printTree(root):
@@ -67,27 +65,25 @@ def gen(n, node, tree_num=-1):
     if n <= 1 or node == None:
         return
 
-    global array_and_mat
-    array_and_mat = pop(n)
-    t = array_and_mat[0]
-    comb_matrix = array_and_mat[1]
+    t, comb_matrix = pop(n)
     nb_of_trees = t[len(t)-1]
-    print("number of tree of height {0} : {1}".format(n, nb_of_trees))
+    #print("number of tree of height {0} : {1}".format(n, nb_of_trees))
     unary_tree_nb = t[len(t)-2]
 
     if tree_num == -1:
         hit = random.randint(1, nb_of_trees)
-        # hit = 600
     else:
         hit = tree_num
 
-    print("picking the {0}th tree".format(hit))
-    print("if {0} <= {1} then unary".format(hit, unary_tree_nb))
+    node.number = hit
+
+    #print("picking the {0}th tree".format(hit))
+    #print("if {0} <= {1} then unary".format(hit, unary_tree_nb))
 
     if hit <= unary_tree_nb:
         node.left = AUB(node_index)
         node_index = node_index+1
-        gen(n-1, node.left)
+        gen(n-1, node.left, hit)
     else:
         i = 0
         j = len(t)-3
@@ -103,26 +99,18 @@ def gen(n, node, tree_num=-1):
         found_k = i
         found_nk = n - found_k - 1
         assert(n == found_k + found_nk + 1)
-        print(trace)
 
-        print("k : {0}, n - k : {1}".format(found_k, found_nk))
-        print(t)
-        print(comb_matrix)
-        print("stopped at {0} before S exceed {1}".format(trace[len(trace)-1], hit))
+        #print("k : {0}, n - k : {1}".format(found_k, found_nk))
+        #print("stopped at {0} before S exceed {1}".format(trace[len(trace)-1], hit))
 
         tree_num = hit - trace[len(trace)-1]
-        print("selected tree number config : {0}".format(tree_num))
+        #print("selected tree number config : {0}".format(tree_num))
 
         couples = [(i, j) for i in range(t[found_k-1]) for j in range(t[found_nk-1])]
-
-        # print(couples)
-        # print(len(couples))
-        # print(couples[tree_num-1])
 
         tree_num_left = couples[tree_num-1][0]
         tree_num_right = couples[tree_num-1][1]
 
-        print("from node {0}, creating nodes {1} and {2}".format(n, n-1, n-2))
         node.left = AUB(node_index)
         node.right = AUB(node_index + 1)
         node_index = node_index + 2
@@ -135,8 +123,6 @@ def main():
     parser.add_argument("N", help="number of nodes", type=int)
 
     args = parser.parse_args()
-    global array_and_mat
-    array_and_mat = pop(args.N)
 
     global node_index
     root = AUB(node_index)
@@ -145,8 +131,8 @@ def main():
     global graph
     gen(args.N, root)
     AUB.printTree(root)
-    print(graph.to_string())
     graph.write_png("gen_aub.png")
+    print(root.number)
 
 if __name__ == "__main__":
     main()
