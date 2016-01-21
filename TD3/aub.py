@@ -10,6 +10,8 @@ import math
 graph = pydot.Dot(graph_type='digraph', nodesep=.75)
 array_and_mat = None
 
+node_index = 1
+
 class AUB():
     def __init__(self, key):
       self.left = None
@@ -60,6 +62,8 @@ def pop(n):
 
 def gen(n, node, tree_num=-1):
 
+    global node_index
+
     if n <= 1 or node == None:
         return
 
@@ -81,8 +85,9 @@ def gen(n, node, tree_num=-1):
     print("if {0} <= {1} then unary".format(hit, unary_tree_nb))
 
     if hit <= unary_tree_nb:
-        node.left = AUB(n-1)
-        gen(n-1, node.left, hit)
+        node.left = AUB(node_index)
+        node_index = node_index+1
+        gen(n-1, node.left)
     else:
         i = 0
         j = len(t)-3
@@ -117,8 +122,10 @@ def gen(n, node, tree_num=-1):
         tree_num_left = couples[tree_num-1][0]
         tree_num_right = couples[tree_num-1][1]
 
-        node.left = AUB(n-1)
-        node.right = AUB(n-2)
+        print("from node {0}, creating nodes {1} and {2}".format(n, n-1, n-2))
+        node.left = AUB(node_index)
+        node.right = AUB(node_index + 1)
+        node_index = node_index + 2
 
         gen(found_k, node.left, tree_num_left)
         gen(found_nk, node.right, tree_num_right)
@@ -130,7 +137,10 @@ def main():
     args = parser.parse_args()
     global array_and_mat
     array_and_mat = pop(args.N)
-    root = AUB(args.N)
+
+    global node_index
+    root = AUB(node_index)
+    node_index = node_index + 1
 
     global graph
     gen(args.N, root)

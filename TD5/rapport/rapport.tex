@@ -9,6 +9,7 @@
 \usepackage{amsmath,amsfonts,amsthm} % Math packages
 \usepackage[pdftex]{graphicx}
 \usepackage{url}
+\usepackage{enumitem}
 
 
 %%% Custom sectioning
@@ -36,6 +37,7 @@
 
 %%% Maketitle metadata
 \newcommand{\horrule}[1]{\rule{\linewidth}{#1}} 	% Horizontal rule
+\newcommand{\BigO}[1]{\ensuremath{\operatorname{O}\bigl(#1\bigr)}}
 
 \title{
 		%\vspace{-1in}
@@ -107,8 +109,26 @@ si le branchement est pris ou non.
 
 
 \section{Min et Max d’un tableau}
-	\item Third item in a list
-   	\item First item in a list
+	\item 
+
+\begin{itemize}
+\item Pour l'algorithme naïf : on a deux variables: \textit{min} et \textit{max} qui traquent l'élément le plus petit et l'élément le plus grand du tableau, puis on itére sur le tableau en comparant chaque élément du tableau avec ces 2 variables.
+Les variables sont mises à jour suivant si l'élément en question est plus petit ou plus grand que l'élément le plus petit ou le plus grand courant.
+\item 
+Pour la version optimisée:
+On initialise min et max en tant que dernier élément du tableau.
+Puis on itére sur le tableau par paire de deux éléments, et on compare le minimum et maximum de cette paire avec les variables courantes min et max.
+\end{itemize}
+
+
+   	\item
+\begin{itemize}
+    \item Pour l'algorithme naïf : on a une complexité temporelle en \BigO{n}. On fait 2 comparaisons par itération, pour un total
+de 2n - 2 comparaisons.
+    \item Pour la version optimisée: on a aussi une complexité temporelle en \BigO{n}. On effectue 3 comparaisons par itération, mais le tableau
+est parcouru deux par deux éléments. Un total de \(\frac{3(n - 1)}{2}\) comparaisons est fait.
+\end{itemize}
+
 	\item Second item in a list
 	\item Third item in a list
     \item First item in a list
@@ -117,16 +137,60 @@ si le branchement est pris ou non.
 
 \section{Exponentiation rapide}
 
-	\item Third item in a list
-   	\item First item in a list
-	\item Second item in a list
+	\item Pour la suite de la section, le problème de l'exponentiation rapide a été choisi.
+
+   	\item
+
+\begin{itemize}
+    \item L'algorithme naïf : on multiplie un nombre x par lui-même un nombre n de fois dans une boucle.
+    \item La version optimisée: Considérant une fonction récursive expsqu(x, n) qui prend un entier n supérieur à 1 et un réel
+x en paramètres. On distingue 3 cas pour n:
+\begin{itemize}[label=$\bullet$]
+\item Si n = 1, on renvoie x. (expsqu(x, 1) = x)
+\item Si n est pair, on calcule \( (x^2)^{n/2} \), soit expsqu( \(x^2\), n/2 ),
+\item Si n est impair avec n > 2, on calcule \( x(x^2)^{(n-1)/2} \), soit x $\cdot$ expsqu( \( x^2 \), (n-1)/2 ).
+\end{itemize}
+\end{itemize}
+
+	\item
+\begin{itemize}
+    \item La version naïve a une complexité temporelle linéaire en \BigO{n} avec n - 1 multiplications.
+    \item
+ La version optimisée a une complexité temporelle en \BigO{\log _2 \left( n \right )}, avec
+    au plus $\lfloor \log _2 \left( n \right ) \rfloor$ multiplications et $\lfloor \log _2 \left( n \right ) \rfloor$ élévations au carré.
+\end{itemize}
+
 	\item Third item in a list
     \item First item in a list
 
 \section{Au-delà de l’article}
 \subsection{Somme maximale}
-	\item Third item in a list
-   	\item First item in a list
+
+	\item
+
+\begin{itemize}
+    \item La version naïve : on utilise deux boucles avec deux indices, l'indice de la première boucle
+indique le premier élément du sous-tableau étudié, l'indice de la deuxième boucle basé sur le premier
+indice indexe le sous-tableau défini dans la première boucle, calcule la somme des éléments du sous-tableau,
+puis compare cette somme à une variable contenant la somme maximale courante. Cette somme est mise à jour
+si la somme calculée est supérieure.
+    \item La version optimisée : 
+\begin{itemize}[label=$\bullet$]
+\item On calcule l'indice qui représente l'élément du milieu du tableau.
+\item On définit une fonction utilitaire appelée max\_crossing\_sum qui renvoie la somme maximale d'un tableau en y incluant l'élément
+du milieu du tableau.
+\item On divise le tableau en deux moitiés, puis on fait un appel récursif sur chaque moitié.
+\item On renvoie le maximum de ces deux résultats et du résultat de max\_crossing\_sum.
+\end{itemize}
+\end{itemize}
+
+   	\item
+\begin{itemize}
+\item La version naïve a une complexité temporelle quadratique en \BigO{n^2}.
+\item La version optimisée : on a une complexité quasilinéaire en $\theta ( n \cdot \log _2 \left( n \right ) )$ obtenue
+à partir de la relation de récurrence $ T(n) = 2 \cdot T(n/2) + \theta (n)$ et du cas 2 du théorème maître.
+\end{itemize}
+
    	\item First item in a list
 
 \end{enumerate}
