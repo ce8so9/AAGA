@@ -3,3 +3,6 @@ ctest:
 
 pytest:
 	./minmax.py 10000000
+
+aubtest:
+	./aub_minmax.py 50000 5
